@@ -41,7 +41,7 @@ def split_date(date_string):
     the last three chars represent the day
     '''
     year = int(date_string[0:4])
-    day_of_year = int(date_string[6:])
+    day_of_year = int(date_string[4:])
     
     return day_of_year, year
     
@@ -64,7 +64,7 @@ def get_year(date_string):
     Input: int date_string
     Outpur: int year
     '''
-    _, year = split_date(str(date_string))
+    year = int(str(date_string)[0:4])
     return year
     
 def get_month(date_string):
@@ -95,13 +95,13 @@ if __name__ == "__main__":
     #print 'Week number: %d, for entry %s' % (week_number, date_string)
     
     ######################
-    df = pd.DataFrame({'date_string':[201800151, 201800167, 201800183],
-                       'value':[1.2, 3.2, 5.6]})
+    df = pd.DataFrame({'date_string':[2001008,2001015, 2001022],
+                       'value':[1.4, 3.2, 5.6]})
 
     df['year'] = df['date_string'].apply(get_year)
     df['month'] = df['date_string'].apply(get_month)
     df['week_num'] = df['date_string'].apply(get_week_number)
-    df['ranked_score'] = df['value'].rank(ascending=False)
+    #df['ranked_score'] = df['value'].rank(ascending=False)
     print df
     
 
