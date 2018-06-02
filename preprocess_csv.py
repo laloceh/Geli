@@ -31,10 +31,8 @@ df['name_codes'] = df.NAMELSAD.astype('category').cat.codes
 df = df.drop(['OBJECTID'],axis=1)
 #print df.head()
 
+
 cols = list(df.columns[1:-1])
-
-
-
 count = 1
 for c in cols:
     
