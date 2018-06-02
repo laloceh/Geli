@@ -15,6 +15,8 @@ import numpy as np
 import sys
 from multiprocessing import Pool, cpu_count
 import warnings
+import open_file_window
+import time
 
 warnings.filterwarnings('ignore')
 
@@ -81,58 +83,79 @@ def process_data(c):
         
     return final_df
 
-inputfile = 'Export_Output_EVI.txt'
-outputfile = 'Export_Output_EVI.xlsx'
-outputfile_csv = 'Export_Output_EVI.csv'
-
-#inputfile = 'very_small_data.txt'
-#outputfile = 'very_small_data.xlsx'
-
-chunksize = 10000
-
-final_list = []
-# load the big file in smaller chunks
-for df in pd.read_csv(inputfile, chunksize=chunksize):
-    print 'CHUNK', df.shape
+######################3#####
+if __name__ == "__main__":
     
-    #final_df = pd.DataFrame(columns = ['an', 'grid_fid', 'NAMELSAD', 'year', 'month','week'])
-    #sorted(df.NAMELSAD.unique())
+    '''
+    Find the input file
+    This is the file with the SIG exported data (.txt)
+    '''
+    inputfile = open_file_window.open_files()
+    #inputfile = 'Export_Output_EVI.txt'
+    if not inputfile:
+        print 'No input file selected'
+        sys.exit(10)
     
-    ##df['name_codes'] = df.NAMELSAD.astype('category').cat.codes
+    time.sleep(2)
+    '''
+    Find the output file
+    This is the file where to put the resulting .csv file
+    '''
+    outputfile_csv = open_file_window.save_to_files()
+    #outputfile_csv = 'Export_Output_EVI.csv'
+    #outputfile = 'Export_Output_EVI.xlsx'
+    if not outputfile_csv:
+        print 'No output file selected'
+        sys.exit(10)
     
-    ##df = df.drop(['OBJECTID'],axis=1)
-    #print df.head()
+    #inputfile = 'very_small_data.txt'
+    #outputfile = 'very_small_data.xlsx'
     
-    cols = list(df.columns[2:])
-    #print cols
-    #print len(cols)/cpu_count() + 1
-    dates_df = df[cols]
-    #dates_df.iloc[:,0:5]
-    proc = cpu_count()
-    final_list.append(process_Pandas_data(process_data, dates_df, proc))
-
-final_df = pd.concat(final_list)
-
-##final_df['grid_fid'] = final_df.NAMELSAD.astype('category').cat.codes
-final_df.rename(columns={'OBJECTID':'grid_fid'}, inplace=True)
-final_df = final_df[['grid_fid','NAMELSAD', 'year','month','week','an']]
-final_df[['grid_fid','year','month','week']] = final_df[['grid_fid','year','month','week']].astype(int) 
-final_df.sort_values(by=['grid_fid'], ascending=True ,inplace=True)
-
-print
-print 'Final DF shape',final_df.shape    
-'''
-    Write to Excel
-'''
-#print "Writing to Excel"
-#writer = ExcelWriter(outputfile)
-#final_df.to_excel(writer, 'Sheet1', index=False)
-#writer.save()
-#print "File %s created" % outputfile
-
-'''
-    Write to CSV
-'''
-print "Writing to CSV"
-final_df.to_csv(outputfile_csv,index=False, chunksize=chunksize)
-print "File %s created" % outputfile_csv
+    chunksize = 10000
+    
+    final_list = []
+    # load the big file in smaller chunks
+    for df in pd.read_csv(inputfile, chunksize=chunksize):
+        print 'CHUNK', df.shape
+        
+        #final_df = pd.DataFrame(columns = ['an', 'grid_fid', 'NAMELSAD', 'year', 'month','week'])
+        #sorted(df.NAMELSAD.unique())
+        
+        ##df['name_codes'] = df.NAMELSAD.astype('category').cat.codes
+        
+        ##df = df.drop(['OBJECTID'],axis=1)
+        #print df.head()
+        
+        cols = list(df.columns[2:])
+        #print cols
+        #print len(cols)/cpu_count() + 1
+        dates_df = df[cols]
+        #dates_df.iloc[:,0:5]
+        proc = cpu_count()
+        final_list.append(process_Pandas_data(process_data, dates_df, proc))
+    
+    final_df = pd.concat(final_list)
+    
+    ##final_df['grid_fid'] = final_df.NAMELSAD.astype('category').cat.codes
+    final_df.rename(columns={'OBJECTID':'grid_fid'}, inplace=True)
+    final_df = final_df[['grid_fid','NAMELSAD', 'year','month','week','an']]
+    final_df[['grid_fid','year','month','week']] = final_df[['grid_fid','year','month','week']].astype(int) 
+    final_df.sort_values(by=['grid_fid'], ascending=True ,inplace=True)
+    
+    print
+    print 'Final DF shape',final_df.shape    
+    '''
+        Write to Excel
+    '''
+    #print "Writing to Excel"
+    #writer = ExcelWriter(outputfile)
+    #final_df.to_excel(writer, 'Sheet1', index=False)
+    #writer.save()
+    #print "File %s created" % outputfile
+    
+    '''
+        Write to CSV
+    '''
+    print "Writing to CSV"
+    final_df.to_csv(outputfile_csv,index=False, chunksize=chunksize)
+    print "File %s created" % outputfile_csv

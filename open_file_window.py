@@ -47,9 +47,10 @@ def save_to_files():
     
     return filenames
  
-
-inputfile = open_files()
-print inputfile
-
-outputfile = save_to_files()
-print outputfile
+if __name__ == "__main__":
+    
+    inputfile = open_files()
+    print inputfile
+    
+    outputfile = save_to_files()
+    print outputfile
