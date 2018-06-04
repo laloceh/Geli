@@ -111,7 +111,7 @@ if __name__ == "__main__":
     #inputfile = 'very_small_data.txt'
     #outputfile = 'very_small_data.xlsx'
     
-    chunksize = 10000
+    chunksize = 1000
     
     final_list = []
     # load the big file in smaller chunks
