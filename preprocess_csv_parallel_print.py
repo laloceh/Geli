@@ -22,6 +22,10 @@ warnings.filterwarnings('ignore')
 
 COUNT = 1 
 
+def work(c):
+    print c
+    return c
+
 def process_Pandas_data(func, df, num_processes=None):
     ''' Apply a function separately to each column in a dataframe, in parallel.'''
     
@@ -33,6 +37,7 @@ def process_Pandas_data(func, df, num_processes=None):
     ret_list = p.map(func, [col_name for col_name in df.columns])        
     p.close()
     p.join()
+    return ret_list
     return pd.concat(ret_list)
 
 
@@ -87,7 +92,7 @@ if __name__ == "__main__":
         print 'No output file selected'
         sys.exit(10)
     
-    chunksize = 10000
+    chunksize = 1000
     
     final_list = []
     # load the big file in smaller chunks
@@ -97,8 +102,14 @@ if __name__ == "__main__":
         cols = list(df.columns[2:])
         dates_df = df[cols]
         proc = cpu_count()
-        final_list.append(process_Pandas_data(process_data, dates_df, proc))
+        #final_list.append(process_Pandas_data(process_data, dates_df, proc))
+        final_list.append(process_Pandas_data(work, dates_df, proc))
     
+    print
+    print
+    #print final_list
+    print len(final_list)
+    sys.exit(99)
     final_df = pd.concat(final_list)
     final_df.rename(columns={'OBJECTID':'grid_fid'}, inplace=True)
     final_df = final_df[['grid_fid','NAMELSAD', 'year','month','week','an']]
