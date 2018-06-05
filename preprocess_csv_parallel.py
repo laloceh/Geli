@@ -43,6 +43,7 @@ def process_Pandas_data(func, df, num_processes=None):
 
 def process_data(c):
     global COUNT
+    global df
     #print c
     
     #final_df = pd.DataFrame(columns = ['an', 'grid_fid', 'NAMELSAD', 'year', 'month','week'])
@@ -113,6 +114,8 @@ if __name__ == "__main__":
     
     chunksize = 1000
     
+    #global df = pd.DataFrame()
+    
     final_list = []
     # load the big file in smaller chunks
     for df in pd.read_csv(inputfile, chunksize=chunksize):
@@ -125,6 +128,7 @@ if __name__ == "__main__":
         
         ##df = df.drop(['OBJECTID'],axis=1)
         #print df.head()
+        
         
         cols = list(df.columns[2:])
         #print cols

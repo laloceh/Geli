@@ -40,7 +40,7 @@ def save_to_files():
     root.focus_force()
     
     #filenames = tkFileDialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
-    filenames = tkFileDialog.asksaveasfilename(parent=root, title = "Save file as")
+    filenames = tkFileDialog.asksaveasfilename(parent=root, title = "Save file as...")
     
     #filenames = tkFileDialog.askopenfilenames(parent=root)
     root.destroy()
